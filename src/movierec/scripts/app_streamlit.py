@@ -322,11 +322,16 @@ def main():
             except Exception as e:
                 st.error(f'Failed to load: {e}')
 
-        # Quick save
-        if st.button('💾 Save Profile', key='save_profile_sidebar'):
-            outp = PROFILES_DIR / f'{st.session_state["user_id"]}.json'
-            outp.write_text(json.dumps(st.session_state['profile'], indent=2))
-            st.success(f'saved → {outp}')
+        # BUTTON: Download profile (as save not supported on Streamlit Community Cloud)
+        payload = json.dumps(st.session_state['profile'], indent=2, ensure_ascii=False).encode('utf-8')
+        if st.download_button(
+            '💾 Download Profile',
+            data=payload,
+            file_name=f'{st.session_state["user_id"]}.json',
+            mime='application/json',
+            key='sidebar_download_profile',
+        ):
+            st.toast('Profile downloaded')
 
     # SIDEBAR TAB: Watchlist (items, watchlist boost)
     with tab_watch:
@@ -434,11 +439,16 @@ def main():
 
         st.markdown('---')
 
-        # BUTTON: Save profile
-        if st.button('💾 Save profile', key='setup_save'):
-            outp = PROFILES_DIR / f'{st.session_state["user_id"]}.json'
-            outp.write_text(json.dumps(st.session_state['profile'], indent=2))
-            st.success(f'Saved to {outp}')
+        # BUTTON: Download profile (as save not supported on Streamlit Community Cloud)
+        payload = json.dumps(st.session_state['profile'], indent=2, ensure_ascii=False).encode('utf-8')
+        if st.download_button(
+            '💾 Download Profile',
+            data=payload,
+            file_name=f'{st.session_state["user_id"]}.json',
+            mime='application/json',
+            key='setup_download_profile',
+        ):
+            st.toast('Profile downloaded')
 
         # BUTTON: Reset profile
         if st.button('🧹 Reset profile', key='setup_reset'):
@@ -539,11 +549,16 @@ def main():
                 c4.button('⭐', key=f'wl_{it}', help='Add to watchlist',
                             on_click=watchlist_toggle, args=(int(it),))
 
-        # Save profile
-        if st.button('💾 Save profile', key='save_profile_recs'):
-            outp = PROFILES_DIR / f'{st.session_state["user_id"]}.json'
-            outp.write_text(json.dumps(prof, indent=2))
-            st.success(f'Saved to {outp}')
+        # Download profile (as save not supported on Streamlit Community Cloud)
+        payload = json.dumps(st.session_state['profile'], indent=2, ensure_ascii=False).encode('utf-8')
+        if st.download_button(
+            '💾 Download Profile',
+            data=payload,
+            file_name=f'{st.session_state["user_id"]}.json',
+            mime='application/json',
+            key='download_profile_recs',
+        ):
+            st.toast('Profile downloaded')
 
         # Similar items explorer (based on liked list)
         st.markdown('---')
@@ -573,3 +588,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
